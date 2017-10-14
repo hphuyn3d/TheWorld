@@ -1,0 +1,61 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Travel Project - @ViewBag.Title</title>
+    <meta charset="utf-8" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/bootswatch/spacelab/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div id="sidebar">
+        <img src="~/img/Pic.jpg" alt="user profile image" class="headshot" />
+        <span id="username">John Doe</span>
+        <ul class="nav">
+            <li class="active"><a asp-controller="App" asp-action="Index">Home</a></li>
+            <li><a asp-controller="App" asp-action="About">About</a></li>
+            <li><a asp-controller="App" asp-action="Contact">Contact</a></li>
+        </ul>
+    </div>
+<div id="wrapper">
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav navbar-left">
+                <li>
+                    <button id="sidebarToggle" class="btn btn-primary">
+                        <i class="fa fa-angle-left"></i>
+                    </button>
+                </li>
+            </ul>
+            <a asp-controller="App" asp-action="Index" class="navbar-brand">Wanderlust</a>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" class="btn btn-sm btn-info">
+                        <i class="fa fa-save"> Save</i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="btn btn-sm btn-info">
+                        <i class="fa fa-print"> Print</i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div id="main" class="container-fluid">
+        @RenderBody()
+    </div>
+    <div id="footer" class="container-fluid">
+        <div class="navbar navbar-inverse navbar-fixed-bottom">
+            <h4 class="text-danger text-center"> &copy; 2017 Hung Huynh</h4>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="~/lib/jQuery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+<script src="~/js/site.js"></script>
+@RenderSection("scripts", false)
+</body>
+</html>
