@@ -40,15 +40,20 @@ namespace TravelProject.Controllers.Api
         }
 
         [HttpPost("")]
-        public IActionResult Post([FromBody]TripViewModel theTrip)
+        public async Task<IActionResult> Post([FromBody]TripViewModel theTrip)
         {
             if (ModelState.IsValid)
             {
                 // Save the Database
                 var newTrip = Mapper.Map<Trip>(theTrip);
-                return Created($"api/trips/{theTrip.Name}", Mapper.Map<TripViewModel>(newTrip));
+                _repository.AddTrip(newTrip);
+
+                if (await _repository.SaveChangesAsync())
+                {
+                    return Created($"api/trips/{theTrip.Name}", Mapper.Map<TripViewModel>(newTrip));
+                }
             }
-            return BadRequest(ModelState);
+            return BadRequest("Failed to save the trip");
         }
     }
 }
