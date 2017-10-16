@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using TravelProject.Models;
 
 namespace TravelProject.Controllers.Api
@@ -13,10 +14,12 @@ namespace TravelProject.Controllers.Api
     public class TripsController : Controller
     {
         private IWorldRepository _repository;
+        private ILogger<TripsController> _logger;
 
-        public TripsController(IWorldRepository repository)
+        public TripsController(IWorldRepository repository, ILogger<TripsController> logger)
         {
             _repository = repository;
+            _logger = logger;
         }
         [HttpGet("")]
         public IActionResult Get()
@@ -29,7 +32,8 @@ namespace TravelProject.Controllers.Api
             }
             catch (Exception ex)
             {
-                // TODO Logging
+               
+                _logger.LogError($"Failed to get All Trips: {ex}");
                 return BadRequest(ex);
             }
     
