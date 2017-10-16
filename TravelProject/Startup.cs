@@ -13,6 +13,7 @@ using Newtonsoft.Json.Serialization;
 using TravelProject.Controllers.Api;
 using TravelProject.Models;
 using TravelProject.Services;
+using TravelProject.ViewModels;
 
 namespace TravelProject
 {
@@ -65,6 +66,7 @@ namespace TravelProject
             Mapper.Initialize(config =>
             {
                 config.CreateMap<TripViewModel, Trip>().ReverseMap();
+                config.CreateMap<StopViewModel, Stop>().ReverseMap();
             });
             loggerFactory.AddConsole();
 
