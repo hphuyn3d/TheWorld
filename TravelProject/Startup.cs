@@ -50,6 +50,7 @@ namespace TravelProject
 
             services.AddDbContext<WorldContext>(); // Register entity framework
             services.AddScoped<IWorldRepository, WorldRepository>();
+            services.AddTransient<GeoCoordsService>();
             services.AddTransient<WorldContextSeedData>();
             services.AddLogging();
             services.AddMvc()
