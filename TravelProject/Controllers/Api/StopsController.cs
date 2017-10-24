@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TravelProject.Models;
+using TravelProject.Services;
 using TravelProject.ViewModels;
 
 namespace TravelProject.Controllers.Api
@@ -17,11 +18,13 @@ namespace TravelProject.Controllers.Api
     {
         private IWorldRepository _repository;
         private ILogger<StopsController> _logger;
+        private GeoCoordsService _coordsService;
 
-        public StopsController(IWorldRepository repository, ILogger<StopsController> logger)
+        public StopsController(IWorldRepository repository, ILogger<StopsController> logger, GeoCoordsService coordsService)
      {
          _repository = repository;
          _logger = logger;
+         _coordsService = coordsService;
      }
 
         [HttpGet("")]
@@ -37,6 +40,44 @@ namespace TravelProject.Controllers.Api
                 _logger.LogError("Failed to get Stops: {0}", ex);
             }
             return BadRequest("Failed to get stops");
+        }
+
+        [HttpPost("")]
+        public async Task<IActionResult> Post(string tripName, [FromBody] StopViewModel vm)
+        {
+            try
+            {
+                // If the VM is valid
+                if (ModelState.IsValid)
+                {
+                    var newStop = Mapper.Map<Stop>(vm);
+                    // Lookup GeoCodes
+                    var result = await _coordsService.GetCoordsAsync(newStop.Name);
+                    if (!result.Success)
+                    {
+                        _logger.LogError(result.Message);
+                    }
+                    else
+                    {
+                        newStop.Latitude = result.Latitude;
+                        newStop.Longitude = result.Longitude;
+
+                        // Save Database
+                        _repository.AddStop(tripName, newStop);
+
+                        if (await _repository.SaveChangesAsync())
+                        {
+                            return Created($"/api/trips/{tripName}/stops/{newStop.Name}",
+                                Mapper.Map<StopViewModel>(newStop));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to save new Stop: {0}", ex);
+            }
+            return BadRequest("Failed to save new stop");
         }
     }
 }
